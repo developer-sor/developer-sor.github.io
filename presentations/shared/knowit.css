@@ -3,8 +3,20 @@
     /*background-image: url( http://www.knowit.no/Templates/Market/images/logo/knowit-logo.png );*/
 }
 
+.reveal section h1 {
+    /*outline: 2px solid green;*/
+    font-size: 2em;
+    padding-bottom: 0.5em;
+    /*text-align: left;*/
+}
+
+.reveal section p {
+    padding-bottom: 0.5em;
+
+}
 
 .slides .header{
+    display: none;
     position:absolute;
     top: -50%;
     left: -50%;
@@ -18,7 +30,7 @@
 
 .slides .footer img {
     /*outline: 1px solid red;*/
-    max-height: 120px;
+    max-height: 40px;
     width: auto;
 }
 

@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>NOV - Overleveringsmøte</title>
+
+    <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+    <meta name="author" content="narvey">
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="../shared/knowit.css">
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/2.6.2/css/reveal.css">
+    <!--<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/2.6.2/css/theme/sky.css" id="theme">-->
+    <link rel="stylesheet" href="../shared/knowit-sky.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/2.6.2/lib/css/zenburn.css">
+
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+        if (window.location.search.match(/print-pdf/gi)) {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = 'css/print/pdf.css';
+            document.getElementsByTagName('head')[0].appendChild(link);
+        }
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="http://cdn.jsdelivr.net/reveal.js/2.6.2/lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="reveal">
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides" id="slides">
+
+
+        <div class="header">Knowit - NOV - 12. mai 2014</div>
+        <div class="footer">
+            <img src="../shared/knowit_TM_logo_green_rgb.svg" alt="logo"/>
+        </div>
+
+
+        <section>
+            <h1>Overleveringsmøte</h1>
+
+            <p>12. mai 2014</p>
+
+            <p></p>
+
+            <!--<h4>Agenda</h4>-->
+
+            <ul>
+                <li>Orientering om siste sprint</li>
+                <li>Demonstrasjon av løsningen</li>
+                <li>Tilgjengeliggjøring av produktet</li>
+                <li>Akseptansetest, kriterier og brukerscenarier</li>
+            </ul>
+
+        </section>
+
+        <section>
+            <h1>Sprint 3 - Overordnet</h1>
+
+            <p>
+                Som prosjektets siste sprint har Sprint 3 vært et "oppsamlingsheat" der
+                en god del nye issues har blitt lagt inn etterhvert. Dette gjør at grafer/burndown charts
+                ikke er særlig informative.
+            </p>
+
+            <p>
+                Hovedfokuset har vært på ferdigstilling av det grafiske uttrykket, end-to-end-testing samt
+                forbedring av feilmeldinger. Vi har også forberedt overlevering ved å sette opp en egen server-instans
+                på Heroku som bruker de spørsmålene som NOV har lagt inn.
+            </p>
+
+        </section>
+
+        <section>
+            <h1>Visuelle endringer</h1>
+            <ul>
+                <li>Safen er gjort enklere, blant annet ved å fjerne skyggen, samt at fargene er endret for å gjøre
+                     alternativene mer synlige.
+                </li>
+                <li>
+                    For små skjermer (ned til iPhone5) er uttrykket vesentlig forenklet, blant annet ved å fjerne
+                    Derrick.
+                </li>
+                <li>
+                    Snakkeboblen vil nå endre størrelse ut i fra hvor langt tekstinnholdet er, på alle skjermer.
+                    Videre er den plassert over safen på små skjermer.
+                </li>
+                <li>
+                    På små skjermer er "Forrige" og "Neste" byttet ut med piler nederst i skjermbildet.
+                </li>
+                <li>
+                    Registreringssidene har fått tekstlige og visuelle forbedringer/forenklinger.
+                </li>
+            </ul>
+        </section>
+
+
+        <section>
+            <h1>Sprint 3</h1>
+            <img src="Burndown.png" alt="Burndown"/>
+        </section>
+
+
+        <section>
+            <div class="stretch">
+                <iframe
+                        class="stretch"
+                        src="https://support.knowit.no/support/issues/?jql=project%20%3D%20%22Virtual%20safe%22%20and%20sprint%20%3D%20118%20and%20status%20%3D%20Resolved"
+                        style="width: 100%; height: 100%"></iframe>
+            </div>
+        </section>
+
+
+        <section>
+            <h1>Kode og teknisk dokumentasjon</h1>
+
+            <p>
+                Kode og teknisk dokumentasjon er tilgjengelig som et Git-repository på GitHub: https://github.com/developer-sor/virtuellsafe.
+            </p>
+            <p>
+                Dersom NOV ønsker å overføre koden til sine interne Git-servere, eller ønsker tilgang til koden på
+                Github, kan dette ordnes ved å kontakte Narve eller Harvey.
+            </p>
+
+        </section>
+
+        <section>
+            <h1>Hosting</h1>
+
+            <ul>
+                <li>
+                    Kode (Heroku):
+                    <ul>
+                        <li>http://knowit-vib-staging.herokuapp.com</li>
+                        <li>http://knowit-vib.herokuapp.com</li>
+                    </ul>
+                </li>
+                <li>
+                    Data (Mongolab):
+                    <ul>
+                        <li>
+                            mongodb://ds037647.mongolab.com:37647/vsafe-dev
+                        </li>
+                        <li>
+                            mongodb://ds039447.mongolab.com:39447/vsafe-prod
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+
+        <section>
+            <div class="stretch">
+                <iframe
+                        src="http://knowit-vib-staging.herokuapp.com/"
+                        class="stretch"
+                        style="width: 100%; height: 100%"
+                        ></iframe>
+            </div>
+        </section>
+
+        <section>
+            <div class="stretch">
+                <iframe
+                        src="http://www.responsimulator.com/?url=http%3A%2F%2Fknowit-vib-staging.herokuapp.com#490"
+                        class="stretch"
+                        style="width: 100%; height: 100%"
+                        ></iframe>
+            </div>
+        </section>
+
+
+        <section>
+            <h1>Akseptansetest</h1>
+            <p>
+                Akseptanseperioden var i utgangspunktet satt til 2. mai til 16. mai. Pga fravær/reiser skjer overleveringen
+                12. mai og vi foreslår mandag 26. som avslutning av akseptanseperioden.
+            </p>
+            <p>
+                Som utgangspunkt for utviklingen har vi satt opp et sett med akseptansekriterier. Disse kriteriene
+                vil bli sendt i et strukturert format (feks Excel) til kunden og kan
+                om ønskelig brukes som utgangspunkt for akseptansetesten.
+            </p>
+        </section>
+
+        <section>
+            <div class="stretch">
+                <iframe
+                        class="stretch"
+                        src="https://support.knowit.no/support/issues/?jql=project%20%3D%20%22Virtual%20safe%22%20%20and%20status%20%3D%20Resolved%20and%20type%20%3D%20%22Sub-task%22%20and%20summary%20~%20%22Gitt%22"
+                        style="width: 100%; height: 100%"></iframe>
+            </div>
+        </section>
+
+
+    </div>
+
+</div>
+
+<script src="http://cdn.jsdelivr.net/reveal.js/2.6.2/lib/js/head.min.js"></script>
+<script src="http://cdn.jsdelivr.net/reveal.js/2.6.2/js/reveal.min.js"></script>
+
+<script>
+
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+
+        width: 1280,
+        height: 1024,
+//        margin: "10px",
+
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Parallax scrolling
+        // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+        // parallaxBackgroundSize: '2100px 900px',
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: 'http://cdn.jsdelivr.net/reveal.js/2.6.2/lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            } },
+            { src: 'http://cdn.jsdelivr.net/reveal.js/2.6.2/plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: 'http://cdn.jsdelivr.net/reveal.js/2.6.2/plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: 'http://cdn.jsdelivr.net/reveal.js/2.6.2/plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            } },
+            { src: 'http://cdn.jsdelivr.net/reveal.js/2.6.2/plugin/zoom-js/zoom.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } },
+            { src: 'http://cdn.jsdelivr.net/reveal.js/2.6.2/plugin/notes/notes.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } }
+        ]
+    });
+
+    //    var n = "full-screen";
+    //    Reveal.addEventListener('full-screen', function () {
+    //        console.log(n + ' has fired');
+    //        alert(n + ' has begun');
+    //
+    //        document.getElementById("slides").removeAttribute("style");
+    //
+    //        alert(n + ' has finished');
+    //
+    //    });
+
+</script>
+
+</body>
+</html>
