@@ -56,21 +56,135 @@
 
             <p>
                 In 2014 Knowit Sør started a small in-house software development department.
-                The technology chosen for the first few projects were HTML5, Angular, Node.js,
+                The technology chosen for the first few projects were HTML5, Angular, REST, Node.js,
                 MongoDB, Heroku. In this talk we present our reasons for choosing this technology stack,
-                important implications, and experiences - both positive and negative
+                important implications, and experiences - both positive and negative.
 
                 The talk will touch on various related issues, including staffing, hosting and project management.
                 The main focus will be on technical differences between our chosen stack and more "standard" development
-                frameworks (Java/JavaEE, .Net): Dynamic languages vs statically typed languages, RDBMS vs NoSQL, build
-                systems and deployment and more.
+                frameworks (Java/JavaEE, .Net): Dynamic typing vs static typing, synchronous
+                vs asynchronous, RDBMS vs NoSQL, build systems and deployment, and more.
+            </p>
+
+            <p>
+                Prerequisites: Some coding experience and knowledge of server side web programming (e.g. JavaEE,
+                ASP.Net)
+                is expected.
             </p>
         </section>
 
+        <section data-markdown>
+            <h1>TOC</h1>
+
+            - Background
+            - Experiences
+            - Why did we do it?
+            - Where we right to do it??
+        </section>
+
+        <section data-markdown>
+            <h1>Background</h1>
+
+            - New software department, starting with
+            a promising portfolio of exactly 0 existing customers/projects
+            - Initially a large and well-organized staff with exactly 1 developer
+            - Limited-to-none experience with all of the following technologies
+        </section>
+
+        <section>
+            <h1>First project</h1>
+
+            <div data-markdown>
+
+                - Now two developers :)
+                - Small, simple data-entry system
+                - Layout was mostly done
+                - No yo, no grunt, no gulp, no mongoose
+                - Heroku, Mongodb, Express, Angular
+            </div>
+        </section>
+
+        </section>
+
+        <section>
+        Dynamicity...
+        </section>
+
+        <section>
+        NPM vs maven/ivy
+        </section>
+
+
+        <section>
+            <h1>Asynchronicity...</h1>
+            <pre class="fragment"><code data-trim>
+void processRequest( ServletRequest req, ServletResponse resp ) {
+    Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
+    try {
+        conn = getConn();
+        ps = conn.prepareStatement( "SELECT pw_hash FROM User WHERE ..." );
+        ps.setString( 1, req.param( "userName" ) );
+        rs = ps.executeQuery();
+        if( rs.next() ) {
+            if( rs.getString(1).equals( computeHash( req.getParam( "password" ) )
+                resp.write( "OK" );
+            else
+                resp.write( "Wrong password" ); 
+        } else {
+        }
+    } finally {
+        DBHelper.close( conn, ps, rs );
+    }
+    ResultSet rs = conn().prepareStatement( "SELECT pw_hash FROM User WHERE ...." ).execute();
+    return rs.next() && rs.getString(1).equals( computeHash(pw) );
+}
+            </code></pre>
+
+            <pre class="fragment"><code data-trim>
+@REST Annotations etc...
+boolean login( String handle, String pw ) {
+    ResultSet rs = conn.prepareStatement( "SELECT pw_hash FROM User WHERE ...." ).execute();
+    return rs.next() && rs.getString(1).equals( computeHash(pw) );
+}
+            </code></pre>
+
+            <pre class="fragment"><code data-trim>
+function verifyPW( request, response ) {
+    db.fetchUser( { username: request.param.username, function( rows ) },
+        function( err, response ) {
+            if( computeHash( request.param.password ) === response.pw_hash ) {
+                res.json( 200 );
+            } else {
+                res.json( 403 ); // or 400 or 422, nitpickers:)
+            }
+        }
+}
+            </code></pre>
+
+        </section>
+
+        <section data-markdown>
+            <h1>Second project</h1>
+
+            - Slightly more complex functionality
+            - Custom, responsive layout
+            - Yo, grunt
+            - Deployment more complex
+
+            - DB: No schema...
+            - Mongoose - wrong promises API
+
+            - Callback pyramid of doom
+            - Error handling
+
+
+        </section>
 
     </div>
 
 </div>
+
+
 
 <script src="http://cdn.jsdelivr.net/reveal.js/2.6.2/lib/js/head.min.js"></script>
 <script src="http://cdn.jsdelivr.net/reveal.js/2.6.2/js/reveal.min.js"></script>
