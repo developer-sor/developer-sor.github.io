@@ -14,8 +14,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <link rel="stylesheet" href="../shared/knowit.css">
-    <link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/2.6.2/css/reveal.css">
+    <!--<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/2.6.2/css/reveal.css">-->
     <!--<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/2.6.2/css/theme/sky.css" id="theme">-->
+    <link rel="stylesheet" href="../shared/reveal-tweaked.css">
+
     <link rel="stylesheet" href="../shared/knowit-sky.css" id="theme">
 
     <!-- For syntax highlighting -->
@@ -41,149 +43,285 @@
 
 <div class="reveal">
 
-    <!-- Any section element inside of this container is displayed as a slide -->
-    <div class="slides" id="slides">
+<!-- Any section element inside of this container is displayed as a slide -->
+<div class="slides" id="slides">
 
 
-        <div class="header">Knowit - KDS - 2014</div>
-        <div class="footer">
-            <img src="../shared/knowit_TM_logo_green_rgb.svg" alt="logo"/>
-        </div>
+<div class="header">Knowit - KDS - 2014</div>
+<div class="footer">
+    <img src="../shared/knowit_TM_logo_green_rgb.svg" alt="logo"/>
+</div>
 
 
-        <section>
-            <h1>Node and NOSQL - experience report</h1>
+<section>
+    <h1>Node and NOSQL - experience report</h1>
 
-            <p>
-                In 2014 Knowit Sør started a small in-house software development department.
-                The technology chosen for the first few projects were HTML5, Angular, REST, Node.js,
-                MongoDB, Heroku. In this talk we present our reasons for choosing this technology stack,
-                important implications, and experiences - both positive and negative.
+    <p>
+        In 2014 Knowit Sør started a small in-house software development department.
+        The technology chosen for the first few projects were HTML5, Angular, REST, Node.js,
+        MongoDB, Heroku. In this talk we present our reasons for choosing this technology stack,
+        important implications, and experiences - both positive and negative.
 
-                The talk will touch on various related issues, including staffing, hosting and project management.
-                The main focus will be on technical differences between our chosen stack and more "standard" development
-                frameworks (Java/JavaEE, .Net): Dynamic typing vs static typing, synchronous
-                vs asynchronous, RDBMS vs NoSQL, build systems and deployment, and more.
-            </p>
+        The talk will touch on various related issues, including staffing, hosting and project management.
+        The main focus will be on technical differences between our chosen stack and more "standard" development
+        frameworks (Java/JavaEE, .Net): Dynamic typing vs static typing, synchronous
+        vs asynchronous, RDBMS vs NoSQL, build systems and deployment, and more.
+    </p>
 
-            <p>
-                Prerequisites: Some coding experience and knowledge of server side web programming (e.g. JavaEE,
-                ASP.Net)
-                is expected.
-            </p>
-        </section>
+    <p>
+        Prerequisites: Some coding experience and knowledge of server side web programming (e.g. JavaEE,
+        ASP.Net)
+        is expected.
+    </p>
+</section>
 
-        <section data-markdown>
-            <h1>TOC</h1>
+<section data-markdown>
+    <h1>TOC</h1>
 
-            - Background
-            - Experiences
-            - Why did we do it?
-            - Where we right to do it??
-        </section>
+    - Background
+    - Experiences
+    - Why did we do it?
+    - Where we right to do it??
+</section>
 
-        <section data-markdown>
-            <h1>Background</h1>
+<section data-markdown>
+    <h1>Background</h1>
 
-            - New software department, starting with
-            a promising portfolio of exactly 0 existing customers/projects
-            - Initially a large and well-organized staff with exactly 1 developer
-            - Limited-to-none experience with all of the following technologies
-        </section>
+    - New software department, starting with
+    a promising portfolio of exactly 0 existing customers/projects
+    - Initially a large and well-organized staff with exactly 1 developer
+    - Limited-to-none experience with all of the following technologies
+</section>
 
-        <section>
-            <h1>First project</h1>
+<section>
+    <h1>First project</h1>
 
-            <div data-markdown>
-
-                - Now two developers :)
-                - Small, simple data-entry system
-                - Layout was mostly done
-                - No yo, no grunt, no gulp, no mongoose
-                - Heroku, Mongodb, Express, Angular
-            </div>
-        </section>
-
-        </section>
-
-        <section>
-        Dynamicity...
-        </section>
-
-        <section>
-        NPM vs maven/ivy
-        </section>
-
-
-        <section>
-            <h1>Asynchronicity...</h1>
-            <pre class="fragment"><code data-trim>
-void processRequest( ServletRequest req, ServletResponse resp ) {
-    Connection conn = null; PreparedStatement ps = null; ResultSet rs = null;
-    try {
-        conn = getConn();
-        ps = conn.prepareStatement( "SELECT pw_hash FROM User WHERE ..." );
-        ps.setString( 1, req.param( "userName" ) );
-        rs = ps.executeQuery();
-        if( rs.next() ) {
-            if( rs.getString(1).equals( computeHash( req.getParam( "password" ) )
-                resp.write( "OK" );
-            else
-                resp.write( "Wrong password" ); 
-        } else {
-        }
-    } finally {
-        DBHelper.close( conn, ps, rs );
-    }
-    ResultSet rs = conn().prepareStatement( "SELECT pw_hash FROM User WHERE ...." ).execute();
-    return rs.next() && rs.getString(1).equals( computeHash(pw) );
-}
-            </code></pre>
-
-            <pre class="fragment"><code data-trim>
-@REST Annotations etc...
-boolean login( String handle, String pw ) {
-    ResultSet rs = conn.prepareStatement( "SELECT pw_hash FROM User WHERE ...." ).execute();
-    return rs.next() && rs.getString(1).equals( computeHash(pw) );
-}
-            </code></pre>
-
-            <pre class="fragment"><code data-trim>
-function verifyPW( request, response ) {
-    db.fetchUser( { username: request.param.username, function( rows ) },
-        function( err, response ) {
-            if( computeHash( request.param.password ) === response.pw_hash ) {
-                res.json( 200 );
-            } else {
-                res.json( 403 ); // or 400 or 422, nitpickers:)
-            }
-        }
-}
-            </code></pre>
-
-        </section>
-
-        <section data-markdown>
-            <h1>Second project</h1>
-
-            - Slightly more complex functionality
-            - Custom, responsive layout
-            - Yo, grunt
-            - Deployment more complex
-
-            - DB: No schema...
-            - Mongoose - wrong promises API
-
-            - Callback pyramid of doom
-            - Error handling
-
-
-        </section>
-
+    <div data-markdown>
+        - Now two developers :)
+        - Smallish, simple data-entry system
+        - No yo, no grunt, no gulp, no db abstraction
+        - Node.js, Express, Angular, MongoDB
     </div>
+
+
+</section>
+
+
+<section data-markdown>
+    <h1>Second project</h1>
+
+    - Slightly more complex functionality
+    - Custom, responsive layout
+    - Now three developers
+    - Yo, grunt, less, minifying, etc etc
+    - Deployment more complex
+    - Mongoose - wrong promises API
+</section>
+
+
+<section>
+    <h1>Dynamicity...</h1>
+
+            <pre class="fragment"><code data-trim>
+                var login_data = { username: "bob", ... };
+                ...
+                if( recipient === login_data.userName ... );
+            </code></pre>
+            <pre class="fragment"><code data-trim>
+                if( !session.username ) {
+                    ...
+                }
+            </code></pre>
+    <div class="fragment" data-markdown>
+        Remedies:
+
+        - Tooling
+        - Tests
+        - Discipline
+    </div>
+</section>
+
+<section>
+    <h1>Asynchronicity...</h1>
+
+            <pre class="fragment"><code data-trim>
+                @REST Annotations etc...
+                boolean verifyPW( String handle, String pw ) {
+                    User u = userController.byHandle( handle );
+                    return u != null && u.getPasswordHash().equals( computeHash(pw) );
+                }
+            </code></pre>
+
+            <pre class="fragment"><code data-trim>
+                function verifyPW( request, response ) {
+                    db.fetchUser( { username: request.param.username },
+                        function( err, response ) {
+                            if( computeHash( request.param.password ) === response.pw_hash ) {
+                                response.json( 200 );
+                            } else {
+                                response.json( 403 ); // or 400 or 422, nitpickers:)
+                            }
+                        }
+                }
+            </code></pre>
+
+</section>
+
+<section>
+    <h1>Asynchronicity...</h1>
+
+
+            <pre><code >
+                function verifyPW( req, res ) {
+                    db.fetchUser(
+                        { username: req.param.username },
+                        function( err, user ) {
+                            if( err ) {
+                                res.json( 500, ... );
+                            } else {
+                                computeHash( req.param.password, function( err, hash ) {
+                                    if( err ) {
+                                        res.json( 500 );
+                                    } else {
+                                        if( hash !== user.passwordHash ) {
+                                            // Save to session and/or db?
+                                            res.json( 200 );
+                                        } else {
+                                            res.json( 403 ); // or 400 or 422, nitpickers:)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                } // PUH
+            </code></pre>
+
+    <aside class="notes">
+        - Unfair comparison?
+        - error handling more important because errors don't necessarily
+        cause server-side stacktraces and client-side errors for debugging
+        - }}}}} - code smell
+        - if/else because res.json doesn't return
+        - imagine if we should update db
+    </aside>
+
+</section>
+
+<section>
+    <h1>Asynchronicity...</h1>
+
+    <h2>Remedies</h2>
+    <ul>
+        <li>Helper methods (aka discipline)</li>
+        <li>Interceptors/Middleware</li>
+        <li class="fragment">Promises to the rescue!</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Asynchronicity</h1>
+            <pre><code data-trim>
+                function verifyPW( req, res )
+                    db.fetchUser( { username: req.param.username } )
+                        .then( function( user ) {
+                            if( user ) {
+                                return Error( "No such user" );
+                            } else {
+                                return computeHash( req.param.password );
+                            }
+                        } )
+                        .then( function( hashedPW ) {
+                            if( hashedPW !== user.passwordHash ) {
+                                // Save to session and/or db?
+                                return Error( "Wrong password" );
+                            } else {
+                                user.last_login = new Date();
+                                return db.save( user );
+                            }
+                        } )
+                        .then( function( savedUser ) {
+                            // ALL SET! Return
+                            res.json( 200, "OK" );
+                        } )
+                        .reject( function( err, user ) {
+                            res.json( 500, err );
+                            }
+                        } );
+                    }
+                }
+            </code></pre>
+</section>
+
+<section>
+    <h1>Build and dependency mgt</h1>
+
+    <p data-markdown>
+        - NPM compares to Ivy, or the dep part of Maven/Gradle
+        - Grunt/Gulp compares to Ant, or the build part of Maven/Gradle
+        - Bower compares to NPM but used for frontend libraries (CSS/JS)
+    </p>
+</section>
+
+
+<section>
+    <h1>Build system</h1>
+
+    <p data-markdown>
+        - Grunt/Gulp compares to Ant, or the build/packaging part of Maven/Gradle
+        - Extremely feature-rich!
+        - May not be necessary :)
+    </p>
+
+    <aside data-markdown>
+        - Grunt can be confusing
+        - Minifying, obfuscate, uglify,
+        - Tests, client+server
+        - Anything else
+        - No build => deployment is sweet
+    </aside>
+</section>
+
+<section>
+    <h1>Deployment</h1>
+    Heroku ftw
+</section>
+
+<section>
+    <h1>MongoDB</h1>
+</section>
+
+
+<section>
+    <h1>Why?</h1>
+
+    <ul>
+        <li>Lightweight</li>
+        <li>Easy to get started</li>
+        <li>Easy to find skilled programmers</li>
+        <li>Easy to retrain programmers</li>
+        <li>Easy to deploy</li>
+    </ul>
+
+</section>
+
+
+<section>
+    <h1>Conclusion?</h1>
+
+    <ul>
+        <li>Lightweight</li>
+        <li>Easy to get started</li>
+        <li>Easy to find skilled programmers</li>
+        <li>Easy to retrain programmers</li>
+        <li>Easy to deploy</li>
+    </ul>
+
+</section>
+
 
 </div>
 
+</div>
 
 
 <script src="http://cdn.jsdelivr.net/reveal.js/2.6.2/lib/js/head.min.js"></script>
