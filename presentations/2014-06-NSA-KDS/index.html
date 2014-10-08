@@ -52,7 +52,7 @@
     <img style="position:relative; left: 400px" src="../shared/knowit_TM_logo_green_rgb.svg" alt="logo"/>
     <!--<span class="footer-text ">Knowit Sør - From JavaEE to Node.js</span>-->
     <br/>
-    <span id="current-time" style="position: relative; left: -200px"> </span>
+    <span id="current-time" style="position: relative; left: -100px"> </span>
 
     <script>
         function zeroPad( num ) {
@@ -87,6 +87,9 @@
 
     <p>
         nsa@knowit.no
+    </p>
+    <p>
+        http://bit.ly/javabin-14-narve
     </p>
 
 </section>
@@ -134,7 +137,7 @@
         - Slightly more complex functionality
         - Yo, grunt, less, minifying, etc etc
         - Deployment more complex
-        - Mongoose - db abstraction layer
+        - Mongoose - db abstraction layer with schema-validation etc
     </p>
 </section>
 
@@ -148,7 +151,8 @@ var login_data = { username: "bob", ... };
 if( recipient === login_data.userName ... );
             </code></pre>
             <pre class="fragment"><code data-trim>
-if( !session.userName ) {
+// CORNER-CASE:
+if( user.isBlackListed ) {
     ...
 }
             </code></pre>
@@ -272,11 +276,7 @@ function verifyPW( request, response ) {
     <h1>Asynchronicity...</h1>
 
     <p>How can we write understandable, safe code?</p>
-    <ul>
-        <li>Helper methods, code style (aka discipline)</li>
-        <li>Interceptors/Middleware</li>
-        <li class="fragment">Promises to the rescue!</li>
-    </ul>
+    <p>Promises to the rescue!</p>
 </section>
 
 <section>
@@ -285,7 +285,7 @@ function verifyPW( request, response ) {
 function verifyPW( req, res )
     db.fetchUser( { username: req.param.username } )
         .then( function( user ) {
-            if( user ) {
+            if( !user ) {
                 return Error( "No such user" );
             } else {
                 return computeHash( req.param.password );
@@ -293,7 +293,6 @@ function verifyPW( req, res )
         } )
         .then( function( hashedPW ) {
             if( hashedPW !== user.passwordHash ) {
-                // Save to session and/or db?
                 return Error( "Wrong password" );
             } else {
                 user.last_login = new Date();
@@ -306,7 +305,6 @@ function verifyPW( req, res )
         } )
         .reject( function( err, user ) {
             res.json( 500, err );
-            }
         } );
 }
             </code></pre>
@@ -330,7 +328,6 @@ function getQuizResult( request, response ) {
 
 <section>
     <h1>Operational errors</h1>
-
     <ul>
         <li>Callbacks are called with error as first argument</li>
         <li>Promises call reject/catch</li>
@@ -339,36 +336,44 @@ function getQuizResult( request, response ) {
 </section>
 
 <section>
-        <h1>Programmer errors</h1>
-        <ul>
-            <li>Don't write buggy code!!!</li>
-            <li><code>try-catch</code> of limited use due to callbacks</li>
-            <li>No centralized error handling</li>
-            <li>On error: Shutdown node. (!)</li>
-        </ul>
-
+    <h1>Programmer errors</h1>
+    <ul>
+        <li>Don't write buggy code!!!</li>
+        <li><code>try-catch</code> of limited use due to callbacks</li>
+        <li>No centralized error handling</li>
+        <li>On error: Shutdown node. Use OS-level tools to auto-restart node. (!)</li>
+    </ul>
 </section>
 
 
 <section>
-        <h1>Clusters and domains</h1>
-        <ul>
-            <li>Nice concept</li>
-            <li>Doesn't avoid "shutdown node" recommendation</li>
-        </ul>
-
+    <h1>Clusters and domains</h1>
+    <ul>
+        <li>Nice concept</li>
+        <li>Doesn't avoid "shutdown node" completely</li>
+        <li>Makes error handling more graceful</li>
+        <li>Avoids OS-level error handling (?)</li>
+    </ul>
 </section>
 
+
+<section>
+    <h1>Performance</h1>
+    <ul>
+        <li>In general: Adequate performance</li>
+        <li>Beware of synchronous code!</li>
+        <li>Free Heroku => annoying waits</li>
+        <li>Scalability :)</li>
+    </ul>
+</section>
 
 <section>
     <h1>Project templates</h1>
-
     <ul>
-        <li>Yeoman compares to maven archetypes
+        <li>Yeoman/Yo compares to maven archetypes
         <li>Lots of nice project templates to choose from :)
         <li class="fragment">Lots of nice project templates to choose from :(
     </ul>
-    </p>
 </section>
 
 <section>
@@ -409,7 +414,7 @@ function getQuizResult( request, response ) {
         <li class="fragment">Large selection :)</li>
         <li class="fragment">Github-based :)</li>
         <li class="fragment">Lots of forks and variations :(</li>
-        <li class="fragment">Many high-quality and feature-rich libraries missing :(</li>
+        <li class="fragment">Some high-quality and feature-rich libraries missing :(</li>
     </ul>
 </section>
 
@@ -448,22 +453,12 @@ function getQuizResult( request, response ) {
 </section>
 
 <section>
-    <h1>Performance</h1>
-    <ul>
-        <li>In general: Adequate performance</li>
-        <li>Beware of synchronous code!</li>
-        <li>Free Heroku => annoying waits</li>
-        <li>Scalability :)</li>
-    </ul>
-</section>
-
-<section>
     <h1>Misc</h1>
     <ul>
-        <li>Start with automated tests early</li>
+        <li>Start with automated tests early. It will not get easier later on. And it can be fun! </li>
         <li>Don't go haywire with cool Grunt tasks - you WILL eventually need to understand some of your Gruntfile</li>
-        <li>Avoid (memory-based) session stuff - node is about horizontal scaling</li>
-        <li>Use promises - early and often</li>
+        <li>Avoid (memory-based) session stuff - node is about <strong>horizontal</strong> scaling</li>
+        <li>Use promises - early and often. Wrap non-promise-based async code. </li>
         <li>Refactor a lot, initially. And then keep on refactoring a lot. </li>
     </ul>
 </section>
@@ -526,7 +521,7 @@ function getQuizResult( request, response ) {
         controls: true,
         progress: true,
         history: true,
-        center: true,
+        center: false,
 
         theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
         transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none

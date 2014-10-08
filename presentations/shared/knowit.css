@@ -13,6 +13,9 @@ code {
     /*outline: 2px solid green;*/
     font-size: 2em;
     padding-bottom: 0.5em;
+    padding-top: 1.5em;
+    /*position: absolute;*/
+    /*top: -2em;*/
     /*text-align: left;*/
 }
 
