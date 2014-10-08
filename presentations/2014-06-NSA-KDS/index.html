@@ -49,14 +49,18 @@
 
 <div class="header">Knowit - KDS - 2014</div>
 <div class="footer">
-    <!--<img src="../shared/knowit_TM_logo_green_rgb.svg" alt="logo"/>-->
-    <!--<span class="footer-text ">Knowit Sør - KDS - 2014 - JavaEE to Node.js</span>-->
-    <div id="current-time"> </div>
+    <img style="position:relative; left: 400px" src="../shared/knowit_TM_logo_green_rgb.svg" alt="logo"/>
+    <!--<span class="footer-text ">Knowit Sør - From JavaEE to Node.js</span>-->
+    <br/>
+    <span id="current-time" style="position: relative; left: -200px"> </span>
 
     <script>
+        function zeroPad( num ) {
+            return num < 10 ? "0"+num : num;
+        }
         function updateClock() {
             var now = new Date();
-            var time = now.getHours() + ':' + now.getMinutes() + "." + now.getSeconds();
+            var time = now.getHours() + ':' + zeroPad(now.getMinutes());
             // set the content of the element with the ID time to the formatted string
             document.getElementById('current-time').innerHTML = time;
 
@@ -71,25 +75,20 @@
 
 
 <section>
-    <h1>From JavaEE to Node.js - experience report</h1>
+    <h1>From JavaEE to Node.js</h1>
 
     <p>
-        In 2014 Knowit Sør started a small in-house software development department.
-        The technology chosen for the first few projects were HTML5, Angular, REST, Node.js,
-        MongoDB, Heroku. In this talk we present our reasons for choosing this technology stack,
-        important implications, and experiences - both positive and negative.
-
-        The talk will touch on various related issues, including staffing, hosting and project management.
-        The main focus will be on technical differences between our chosen stack and more "standard" development
-        frameworks (Java/JavaEE, .Net): Dynamic typing vs static typing, synchronous
-        vs asynchronous, RDBMS vs NoSQL, build systems and deployment, and more.
+        Javabin, 2014-09-08
     </p>
 
     <p>
-        Prerequisites: Some coding experience and knowledge of server side web programming (e.g. JavaEE,
-        ASP.Net)
-        is expected.
+        Narve Sætre, Knowit
     </p>
+
+    <p>
+        nsa@knowit.no
+    </p>
+
 </section>
 
 <section>
@@ -187,6 +186,16 @@ if( !session.userName ) {
         for( i = 0; i < 10; i++ ) {
             var link = { label: "Link number " + i };
             link.onClick = function() { alert( "You clicked " + i ); }
+            addLinkToDocumentSomehow( link );
+        }
+    }
+    </code></pre>
+    <pre class="fragment"><code>
+    function addLinks() {
+        for( i = 0; i < 10; i++ ) {
+            var link = { label: "Link number " + i };
+            var linkNo = i;
+            link.onClick = function() { alert( "You clicked " + linkNo ); }
             addLinkToDocumentSomehow( link );
         }
     }
@@ -305,26 +314,68 @@ function verifyPW( req, res )
 
 
 <section>
-    <h1>Errors??</h1>
+    <h1>Error handling</h1>
 
     <pre class="fragment"><code>
-function getQuiz( request, response ) {
+function getQuizResult( request, response ) {
     db.fetchQuiz( request.quiz.id )
         .then( function( quiz ) {
-            res.json( quiz.data );
+            res.json( quiz.data.result ); // What if quiz is null/undefined?
         } );
+        // What if db fails?
 }
     </code></pre>
 
 </section>
 
+<section>
+    <h1>Operational errors</h1>
+
+    <ul>
+        <li>Callbacks are called with error as first argument</li>
+        <li>Promises call reject/catch</li>
+        <li>Should be handled as in other languages...</li>
+    </ul>
+</section>
 
 <section>
-    <h1>Build and dependency mgt</h1>
+        <h1>Programmer errors</h1>
+        <ul>
+            <li>Don't write buggy code!!!</li>
+            <li><code>try-catch</code> of limited use due to callbacks</li>
+            <li>No centralized error handling</li>
+            <li>On error: Shutdown node. (!)</li>
+        </ul>
+
+</section>
+
+
+<section>
+        <h1>Clusters and domains</h1>
+        <ul>
+            <li>Nice concept</li>
+            <li>Doesn't avoid "shutdown node" recommendation</li>
+        </ul>
+
+</section>
+
+
+<section>
+    <h1>Project templates</h1>
+
+    <ul>
+        <li>Yeoman compares to maven archetypes
+        <li>Lots of nice project templates to choose from :)
+        <li class="fragment">Lots of nice project templates to choose from :(
+    </ul>
+    </p>
+</section>
+
+<section>
+    <h1>Dependency mgt</h1>
 
     <p data-markdown>
-        - NPM compares to Ivy, or the dep part of Maven/Gradle
-        - Grunt/Gulp compares to Ant, or the build part of Maven/Gradle
+        - Node Package Manager (NPM) compares to Ivy, or the dep part of Maven/Gradle
         - Bower compares to NPM but used for frontend libraries (CSS/JS)
     </p>
 </section>
@@ -335,40 +386,86 @@ function getQuiz( request, response ) {
 
     <p data-markdown>
         - Grunt/Gulp compares to Ant, or the build/packaging part of Maven/Gradle
-        - Extremely feature-rich!
-        - May not be necessary :)
+        - Extremely feature-rich:
+            - Auto-reload
+            - less->css
+            - minifying
+            - client-unit-tests
+            - ... and everything else
     </p>
 
-    <aside data-markdown>
-        - Grunt can be confusing
-        - Minifying, obfuscate, uglify,
-        - Tests, client+server
-        - Anything else
-        - No build => deployment is sweet
-    </aside>
+    <!--<aside data-markdown>-->
+        <!--- Grunt can be confusing-->
+        <!--- Minifying, obfuscate, uglify,-->
+        <!--- Tests, client+server-->
+        <!--- Anything else-->
+        <!--- No build => deployment is sweet-->
+    <!--</aside>-->
 </section>
+
+<section>
+    <h1>Third-party libraries</h1>
+    <ul>
+        <li class="fragment">Large selection :)</li>
+        <li class="fragment">Github-based :)</li>
+        <li class="fragment">Lots of forks and variations :(</li>
+        <li class="fragment">Many high-quality and feature-rich libraries missing :(</li>
+    </ul>
+</section>
+
 
 <section>
     <h1>Deployment</h1>
     Heroku ftw:
-    <pre><code>
-    >git push production master
-    >git push staging master
+    <pre><code data-trim>
+>git push production master
+>git push staging master
     </code></pre>
+
+    <div class="fragment">
+    <p>However...</p>
+    <pre><code data-trim>
+>cd dist; rm -rf *; git pull; cd ..
+>grunt clean build;
+>cd dist; git add -A .; git commit -m "Version xxx"
+>git push production master
+    </code></pre>
+    </div>
 </section>
 
 <section>
     <h1>MongoDB</h1>
-
+    <ul class="fragment">
+        <li>Very easy to get started</li>
+        <li>Really fun to work with</li>
+        <li>Supports joins, advanced queries, subset selections etc</li>
+        <li>Free/paid hosting available (Mongolab, MongoHQ, ...)</li>
+        <li>Performance: Adequate</li>
+        <li>Suitable for some data structures</li>
+        <li>Use schema validation if worried about data integrity</li>
+        <li>Beware of changing demands! E.g. statistics, reports, summaries</li>
+    </ul>
 </section>
 
 <section>
     <h1>Performance</h1>
+    <ul>
+        <li>In general: Adequate performance</li>
+        <li>Beware of synchronous code!</li>
+        <li>Free Heroku => annoying waits</li>
+        <li>Scalability :)</li>
+    </ul>
 </section>
 
-
 <section>
-    <h1>Third-party libraries</h1>
+    <h1>Misc</h1>
+    <ul>
+        <li>Start with automated tests early</li>
+        <li>Don't go haywire with cool Grunt tasks - you WILL eventually need to understand some of your Gruntfile</li>
+        <li>Avoid (memory-based) session stuff - node is about horizontal scaling</li>
+        <li>Use promises - early and often</li>
+        <li>Refactor a lot, initially. And then keep on refactoring a lot. </li>
+    </ul>
 </section>
 
 
@@ -380,6 +477,7 @@ function getQuiz( request, response ) {
         <li>Easy to get started</li>
         <li>Easy to find skilled programmers</li>
         <li>Easy to retrain programmers</li>
+        <li>One language to bind them all :)</li>
         <li>Easy and cheap deployment/hosting</li>
     </ul>
 
@@ -395,9 +493,15 @@ function getQuiz( request, response ) {
         <li>Easy to find skilled programmers</li>
         <li>Easy to retrain programmers</li>
         <li>Easy and cheap deployment/hosting</li>
-        <li class="fragment">FUN :)</li>
+        <li class="fragment">Lots of unusual errors and problems!</li>
+        <li class="fragment">Projects delivered successfully</li>
+        <!--<li class="fragment">FUN :)</li>-->
     </ul>
 
+</section>
+
+<section data-background="https://raw.githubusercontent.com/markdalgleish/presentation-build-wars-gulp-vs-grunt/master/src/images/gif/anchorman.gif"
+    <h1 style="color: white">FUN :)</h1>
 </section>
 
 
@@ -433,6 +537,8 @@ function getQuiz( request, response ) {
 
         // Optional libraries used to extend on reveal.js
         dependencies: [
+//            { src: 'socket.io/socket.io.js', async: true },
+//            { src: 'plugin/notes-server/client.js', async: true },
             { src: 'http://cdn.jsdelivr.net/reveal.js/2.6.2/lib/js/classList.js', condition: function () {
                 return !document.body.classList;
             } },
