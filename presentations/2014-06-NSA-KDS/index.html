@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>KDS</title>
+    <title>JavaEE to Node.js</title>
 
     <meta name="author" content="narve">
 
@@ -49,12 +49,29 @@
 
 <div class="header">Knowit - KDS - 2014</div>
 <div class="footer">
-    <img src="../shared/knowit_TM_logo_green_rgb.svg" alt="logo"/>
+    <!--<img src="../shared/knowit_TM_logo_green_rgb.svg" alt="logo"/>-->
+    <!--<span class="footer-text ">Knowit Sør - KDS - 2014 - JavaEE to Node.js</span>-->
+    <div id="current-time"> </div>
+
+    <script>
+        function updateClock() {
+            var now = new Date();
+            var time = now.getHours() + ':' + now.getMinutes() + "." + now.getSeconds();
+            // set the content of the element with the ID time to the formatted string
+            document.getElementById('current-time').innerHTML = time;
+
+            // call this function again in 1000ms
+            setTimeout(updateClock, 1000);
+        }
+        updateClock(); // initial call
+    </script>
+
+
 </div>
 
 
 <section>
-    <h1>Node and NOSQL - experience report</h1>
+    <h1>From JavaEE to Node.js - experience report</h1>
 
     <p>
         In 2014 Knowit Sør started a small in-house software development department.
@@ -75,22 +92,26 @@
     </p>
 </section>
 
-<section data-markdown>
+<section>
     <h1>TOC</h1>
 
-    - Background
-    - Experiences
-    - Why did we do it?
-    - Where we right to do it??
+    <p data-markdown>
+        - Background
+        - Experiences
+        - Why did we do it?
+        - Did we do the right thing??
+    </p>
 </section>
 
-<section data-markdown>
+<section>
     <h1>Background</h1>
 
-    - New software department, starting with
-    a promising portfolio of exactly 0 existing customers/projects
-    - Initially a large and well-organized staff with exactly 1 developer
-    - Limited-to-none experience with all of the following technologies
+    <p data-markdown>
+        - New software department, starting with
+        a promising portfolio of exactly 0 existing customers/projects
+        - Initially a large and well-organized staff with exactly 1 developer
+        - Limited-to-none experience with all of the following technologies
+    </p>
 </section>
 
 <section>
@@ -103,36 +124,43 @@
         - Node.js, Express, Angular, MongoDB
     </div>
 
-
 </section>
 
 
-<section data-markdown>
+<section>
     <h1>Second project</h1>
 
-    - Slightly more complex functionality
-    - Custom, responsive layout
-    - Now three developers
-    - Yo, grunt, less, minifying, etc etc
-    - Deployment more complex
-    - Mongoose - wrong promises API
+    <p data-markdown>
+        - Now three developers
+        - Slightly more complex functionality
+        - Yo, grunt, less, minifying, etc etc
+        - Deployment more complex
+        - Mongoose - db abstraction layer
+    </p>
 </section>
 
 
 <section>
     <h1>Dynamicity...</h1>
 
-            <pre class="fragment"><code data-trim>
-                var login_data = { username: "bob", ... };
-                ...
-                if( recipient === login_data.userName ... );
+            <pre class="fragment"><code>
+var login_data = { username: "bob", ... };
+// some more code here...
+if( recipient === login_data.userName ... );
             </code></pre>
             <pre class="fragment"><code data-trim>
-                if( !session.username ) {
-                    ...
-                }
+if( !session.userName ) {
+    ...
+}
             </code></pre>
-    <div class="fragment" data-markdown>
+</section>
+
+
+<section>
+    <h1>Dynamicity...</h1>
+
+
+    <div data-markdown>
         Remedies:
 
         - Tooling
@@ -141,37 +169,68 @@
     </div>
 </section>
 
+
+<section>
+    <h1>Scope and context</h1>
+
+    <p>
+        <ul>
+            <li>Javascript scopes and contexts are powerful but confusing</li>
+            <li><code>this</code> and <code>new</code> behave in mysterious ways</li>
+            <li>Function level scope, (accidentally) global variables, variable hoisting, etc</li>
+            <li>Discipline, frameworks and conservative coding mitigates this</li>
+        </ul>
+    </p>
+
+    <pre class="fragment"><code>
+    function addLinks() {
+        for( i = 0; i < 10; i++ ) {
+            var link = { label: "Link number " + i };
+            link.onClick = function() { alert( "You clicked " + i ); }
+            addLinkToDocumentSomehow( link );
+        }
+    }
+    </code></pre>
+</section>
+
+
 <section>
     <h1>Asynchronicity...</h1>
 
             <pre class="fragment"><code data-trim>
-                @REST Annotations etc...
-                boolean verifyPW( String handle, String pw ) {
-                    User u = userController.byHandle( handle );
-                    return u != null && u.getPasswordHash().equals( computeHash(pw) );
-                }
+@REST Annotations etc...
+boolean verifyPW( String handle, String pw ) {
+    User u = userController.byHandle( handle );
+    return u != null && u.getPasswordHash().equals( computeHash(pw) );
+}
             </code></pre>
 
             <pre class="fragment"><code data-trim>
-                function verifyPW( request, response ) {
-                    db.fetchUser( { username: request.param.username },
-                        function( err, response ) {
-                            if( computeHash( request.param.password ) === response.pw_hash ) {
-                                response.json( 200 );
-                            } else {
-                                response.json( 403 ); // or 400 or 422, nitpickers:)
-                            }
-                        }
-                }
+function verifyPW( request, response ) {
+    userController.byHandle( request.param.username,
+        function( err, response ) {
+            if( computeHash( request.param.password ) === response.pw_hash ) {
+                response.json( 200 );
+            } else {
+                response.json( 403 ); // or 400 or 422, nitpickers:)
+            }
+        } );
+}
             </code></pre>
 
+    <aside class="notes">
+        - Unfair comparison?
+        - error handling more important because errors don't necessarily
+        cause server-side stacktraces and client-side errors for debugging
+        - }}}}} - code smell
+        - if/else because res.json doesn't return
+        - imagine if we should update db
+    </aside>
 </section>
 
 <section>
     <h1>Asynchronicity...</h1>
-
-
-            <pre><code >
+            <pre><code>
                 function verifyPW( req, res ) {
                     db.fetchUser(
                         { username: req.param.username },
@@ -196,23 +255,16 @@
                 } // PUH
             </code></pre>
 
-    <aside class="notes">
-        - Unfair comparison?
-        - error handling more important because errors don't necessarily
-        cause server-side stacktraces and client-side errors for debugging
-        - }}}}} - code smell
-        - if/else because res.json doesn't return
-        - imagine if we should update db
-    </aside>
+
 
 </section>
 
 <section>
     <h1>Asynchronicity...</h1>
 
-    <h2>Remedies</h2>
+    <p>How can we write understandable, safe code?</p>
     <ul>
-        <li>Helper methods (aka discipline)</li>
+        <li>Helper methods, code style (aka discipline)</li>
         <li>Interceptors/Middleware</li>
         <li class="fragment">Promises to the rescue!</li>
     </ul>
@@ -221,36 +273,51 @@
 <section>
     <h1>Asynchronicity</h1>
             <pre><code data-trim>
-                function verifyPW( req, res )
-                    db.fetchUser( { username: req.param.username } )
-                        .then( function( user ) {
-                            if( user ) {
-                                return Error( "No such user" );
-                            } else {
-                                return computeHash( req.param.password );
-                            }
-                        } )
-                        .then( function( hashedPW ) {
-                            if( hashedPW !== user.passwordHash ) {
-                                // Save to session and/or db?
-                                return Error( "Wrong password" );
-                            } else {
-                                user.last_login = new Date();
-                                return db.save( user );
-                            }
-                        } )
-                        .then( function( savedUser ) {
-                            // ALL SET! Return
-                            res.json( 200, "OK" );
-                        } )
-                        .reject( function( err, user ) {
-                            res.json( 500, err );
-                            }
-                        } );
-                    }
-                }
+function verifyPW( req, res )
+    db.fetchUser( { username: req.param.username } )
+        .then( function( user ) {
+            if( user ) {
+                return Error( "No such user" );
+            } else {
+                return computeHash( req.param.password );
+            }
+        } )
+        .then( function( hashedPW ) {
+            if( hashedPW !== user.passwordHash ) {
+                // Save to session and/or db?
+                return Error( "Wrong password" );
+            } else {
+                user.last_login = new Date();
+                return db.save( user );
+            }
+        } )
+        .then( function( savedUser ) {
+            // ALL SET! Return
+            res.json( 200, "OK" );
+        } )
+        .reject( function( err, user ) {
+            res.json( 500, err );
+            }
+        } );
+}
             </code></pre>
 </section>
+
+
+<section>
+    <h1>Errors??</h1>
+
+    <pre class="fragment"><code>
+function getQuiz( request, response ) {
+    db.fetchQuiz( request.quiz.id )
+        .then( function( quiz ) {
+            res.json( quiz.data );
+        } );
+}
+    </code></pre>
+
+</section>
+
 
 <section>
     <h1>Build and dependency mgt</h1>
@@ -283,23 +350,37 @@
 
 <section>
     <h1>Deployment</h1>
-    Heroku ftw
+    Heroku ftw:
+    <pre><code>
+    >git push production master
+    >git push staging master
+    </code></pre>
 </section>
 
 <section>
     <h1>MongoDB</h1>
+
+</section>
+
+<section>
+    <h1>Performance</h1>
+</section>
+
+
+<section>
+    <h1>Third-party libraries</h1>
 </section>
 
 
 <section>
     <h1>Why?</h1>
 
-    <ul>
+    <ul class="fragment">
         <li>Lightweight</li>
         <li>Easy to get started</li>
         <li>Easy to find skilled programmers</li>
         <li>Easy to retrain programmers</li>
-        <li>Easy to deploy</li>
+        <li>Easy and cheap deployment/hosting</li>
     </ul>
 
 </section>
@@ -308,12 +389,13 @@
 <section>
     <h1>Conclusion?</h1>
 
-    <ul>
+    <ul class="fragment">
         <li>Lightweight</li>
         <li>Easy to get started</li>
         <li>Easy to find skilled programmers</li>
         <li>Easy to retrain programmers</li>
-        <li>Easy to deploy</li>
+        <li>Easy and cheap deployment/hosting</li>
+        <li class="fragment">FUN :)</li>
     </ul>
 
 </section>
